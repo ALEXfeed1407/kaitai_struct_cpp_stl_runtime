@@ -9,7 +9,18 @@ set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(ZLIB)
 find_package(Iconv)
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Core REQUIRED)
+
+if(NOT DEFINED QtPkgList)
+    set(QtPkgList "Qt5;Qt6")
+endif()
+
+foreach(QtPkg ${QtPkgList})
+  find_package(QT NAMES ${QtPkg} HINTS "${QT_ROOT_DIR}" CONFIG REQUIRED COMPONENTS Widgets)
+  if (QT_FOUND)
+    break()
+  endif()
+endforeach()
+
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
 set(CMAKE_AUTOUIC ON)
